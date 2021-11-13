@@ -64,37 +64,55 @@ function saveFile2With(message) {
 function saveFile3() {
         console.time("save file 3");
         console.log("starting to save file 3");
-        return fs.writeFile("users-promises-3.json", jsonUsers)
-                .then(() => console.timeEnd("save file 3"))
-                .then(() => "Hello 3");
+        return new Promise(function(resolve, reject) {
+            setTimeout(() => reject(new Error("Failed saveFile3")), 2000)
+        })
+            .catch(e => {
+            console.log("Catched error: " + e.message + " but resolved with: Hello 3");
+            return { data: null, error: "failed to resolve Hello 3" };
+        })
+        // return fs.writeFile("users-promises-3.json", jsonUsers)
+        //         .then(() => console.timeEnd("save file 3"))
+        //         .then(() => "Hello 3");
 }
 
-// Promise.all([
-//     saveFile1(),
-//     saveFile2With("starting saving file 2")(),
-//     saveFile3()
-// ]).then((arr) => {
-//     console.log(arr);
-//     console.log("Finished saving all files")
-// });
-
-// Promise.race([
-//     saveFile1(),
-//     saveFile2With("starting saving file 2")(),
-//     saveFile3()
-// ]).then((arr) => {
-//     console.log(arr);
-//     console.log("Finished saving all files")
-// });
-
-Promise.allSettled([
+Promise.all([
     saveFile1(),
     saveFile2With("starting saving file 2")(),
     saveFile3()
 ]).then((arr) => {
     console.log(arr);
-    console.log("Finished saving all files")
+    console.log("Finished saving all files");
+    if (arr.some((v) => v.error)) {
+         console.log("There was an error");
+         // handle error gracefully
+    }
+    // continue with successful flow;
+})
+.catch((e) => {
+    console.log("One of the promises rejected with message: " + e.message);
+    // run some other code
 });
+
+// Promise.race([
+//     // saveFile1(),
+//     // saveFile2With("starting saving file 2")(),
+//     saveFile3()
+// ]).then((str) => {
+//     console.log(str);
+//     console.log("Finished saving all files");
+// }).catch((e) => {
+//     console.log("First to reject with message: " + e.message);
+// });
+
+// Promise.allSettled([
+//     saveFile1(),
+//     saveFile2With("starting saving file 2")(),
+//     saveFile3()
+// ]).then((arr) => {
+//     console.log(arr);
+//     console.log("Finished saving all files")
+// });
 
 // always execute
 

@@ -14,13 +14,24 @@ const sampleUser = {
     ]
 }
 
-console.time("GENERATING_USERS");
-const usersJson = []
-for (let i = 0; i < 100000; i++) {
-    const newUser = {...sampleUser};
-    newUser.id = i + 1
-    usersJson.push(newUser);
-}
-console.timeEnd("GENERATING_USERS");
+function createUsers(amountOfUsers = 100000) {
+    console.time("GENERATING_USERS");
+    const usersJson = []
+    for (let i = 0; i < amountOfUsers; i++) {
+        const newUser = {...sampleUser};
+        newUser.id = i + 1
+        usersJson.push(newUser);
+    }
 
-module.exports = usersJson;
+    console.timeEnd("GENERATING_USERS");
+
+    return usersJson;
+}
+
+
+const users = createUsers();
+
+module.exports = {
+    users,
+    createUsers
+};
